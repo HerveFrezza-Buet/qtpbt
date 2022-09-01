@@ -6,5 +6,5 @@ def expectancy(sampler, nb_samples):
     nb_samples : We use many tosses to estimate the expectancy.
     returns : the estimated expectancy.
     """
-    return np.mean(samples(nb_samples)['samples'])
+    return np.mean(sampler(nb_samples)['samples'])
 

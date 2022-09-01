@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 def test_001():
     U = va.sampler.Uniform(-1, 1) # random values in [-1, 1]
     print(U(10))
+    print('E(U) = {}'.format(va.estimator.expectancy(U, 1000)))
 
 def test_002():
     U  = va.sampler.Uniform()
