@@ -1,3 +1,3 @@
 from . import sampler
-from . import distrib
 from . import plot
+from . import estimator
