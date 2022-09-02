@@ -55,7 +55,7 @@ class Apply(Sampler):
         self.vectorized = vectorized
         
     def __call__(self, nb_samples):
-        from_samples = self.from_sampler(nb_samples)
+        from_samples = self.from_sampler(nb_samples)['samples']
         if self.vectorized :
             samples = self.f(from_samples)
         else:
