@@ -61,17 +61,41 @@ def test_005():
     U  = va.sampler.Uniform()
     f  = h_sigmoid
     fU = va.sampler.Apply(U, f, vectorized = True)
-    fig = plt.figure(figsize = (10, 5))
-    nb_samples = 1000
+    nb_samples = 500
     data = fU(nb_samples)
     samples = data['samples']
     from_samples = data['from_samples']
-    p = va.estimator.density_1d(samples, bin_width=.05)
+    pU  = va.estimator.density_1d(from_samples, bin_width=.05)
+    pfU = va.estimator.density_1d(samples, bin_width=.05)
 
-    plt.subplot(2, 2, 1)
-    va.plot.spline_1d(fig.gca(), f, 0, 1, 200)
-    plt.scatter(from_samples, np.zeros(nb_samples), alpha = .1)
-    plt.scatter(np.zeros(nb_samples), samples,      alpha = .1)
+    offset = .05
+    
+    fig = plt.figure(figsize = (10, 10))
+    gs  = fig.add_gridspec(2, 2,
+                           width_ratios  = [2, 1],
+                           height_ratios = [2, 1],
+                           wspace=0.1, hspace=0.1)
+
+    ax = fig.add_subplot(gs[0, 0])
+    ax_main = ax
+    ax.set_aspect('equal')
+    ax.set_xlim((0.0, 1.0))
+    ax.set_ylim((0.0, 1.0))
+    va.plot.spline_1d(ax, f, 0, 1, 200)
+    ax.scatter(from_samples, np.zeros(nb_samples) + offset, alpha = .1)
+    ax.scatter(np.ones(nb_samples) - offset, samples,       alpha = .1)
+    
+    ax = fig.add_subplot(gs[1, 0], sharex = ax_main)
+    ax.set_aspect('equal')
+    ax.set_xlim((0.0, 1.0))
+    ax.set_ylim((0.0, 0.5))
+    va.plot.function_1d(ax, pU, 0, 1, 200)
+    
+    ax = fig.add_subplot(gs[0, 1], sharey = ax_main)
+    ax.set_aspect('equal')
+    ax.set_xlim((0.0, 0.5))
+    ax.set_ylim((0.0, 1.0))
+    va.plot.function_1d(ax, pfU, 0, 1, 200, orientation = 'yx')
     
     plt.show()
     
