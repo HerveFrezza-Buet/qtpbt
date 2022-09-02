@@ -22,12 +22,19 @@ Xs  = np.hstack((Xs, XXs))
 Ys  = np.hstack((Ys, YYs))
 fJ  = va.utils.Spline(Xs, Ys, degree=3)
 
-U = va.sampler.Uniform()
+U = va.sampler.Uniform() 
 I = va.sampler.Apply(U, fI, vectorized = True)
 J = va.sampler.Apply(U, fJ, vectorized = True)
 
-UU      = va.sampler.Nuplet(U, 2)
-IJindep = va.sampler.Apply(UU, lambda u1u2 : (fI(u1u2[0]), fJ(u1u2[1])))
+UUUU      = va.sampler.Nuplet(U, 4)
+UUU       = va.sampler.Nuplet(U, 3)
+
+def noisy(f, epsilon = .1):
+    return lambda x, u : f(x) + epsilon * (2 * u - 1)
+    
+IJindep = va.sampler.Apply(UUUU, lambda u : (noisy(fI)(u[0], u[1]), noisy(fJ)(u[2], u[3])))
+
+IJdep = va.sampler.Apply(UUU, lambda u : (noisy(fI)(u[0], u[1]), noisy(fJ)(u[0], u[2])))
 
 def test_001():
     nb_samples = 300
@@ -76,6 +83,25 @@ def test_002():
                   'I', 'J', samples, offset=offset)
     
     plt.show()
+
+def test_003():
+    nb_samples = 5000
+    samples = IJdep(nb_samples)['samples']
+    
+    fig = plt.figure(figsize = (10,10))
+    gs  = fig.add_gridspec(2, 2,
+                           width_ratios  = [2, 1],
+                           height_ratios = [2, 1],
+                           wspace=0.2, hspace=0.2)
+
+    va.plot.joint(fig.add_subplot(gs[0, 0]),
+                  fig.add_subplot(gs[1, 0]),
+                  fig.add_subplot(gs[0, 1]),
+                  'I', 'J', samples, offset=offset)
+    
+    plt.show()
+
+
     
     
 
