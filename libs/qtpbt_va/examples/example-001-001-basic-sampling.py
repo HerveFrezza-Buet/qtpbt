@@ -63,10 +63,16 @@ def test_005():
     fU = va.sampler.Apply(U, f, vectorized = True)
     fig = plt.figure(figsize = (10, 5))
     nb_samples = 1000
-    samples = fU(nb_samples)['samples']
+    data = fU(nb_samples)
+    samples = data['samples']
+    from_samples = data['from_samples']
     p = va.estimator.density_1d(samples, bin_width=.05)
-    plt.scatter(samples, np.zeros(nb_samples), alpha = .1)
-    va.plot.function_1d(fig.gca(), p, 0, 1, 200, vectorized = True)
+
+    plt.subplot(2, 2, 1)
+    va.plot.spline_1d(fig.gca(), f, 0, 1, 200)
+    plt.scatter(from_samples, np.zeros(nb_samples), alpha = .1)
+    plt.scatter(np.zeros(nb_samples), samples,      alpha = .1)
+    
     plt.show()
     
                           
