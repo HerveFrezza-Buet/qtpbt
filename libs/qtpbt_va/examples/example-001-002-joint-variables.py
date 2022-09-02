@@ -80,7 +80,12 @@ def test_002():
     va.plot.joint(fig.add_subplot(gs[0, 0]),
                   fig.add_subplot(gs[1, 0]),
                   fig.add_subplot(gs[0, 1]),
-                  'I', 'J', samples, offset=offset)
+                  'I', 'J', samples, 
+                  inf = 0, sup = 1,
+                  offset = offset,
+                  cond_thickness = .05,
+                  i_cond = [.20, .5, .80],
+                  j_cond = [.33, .66])
     
     plt.show()
 
@@ -97,7 +102,12 @@ def test_003():
     va.plot.joint(fig.add_subplot(gs[0, 0]),
                   fig.add_subplot(gs[1, 0]),
                   fig.add_subplot(gs[0, 1]),
-                  'I', 'J', samples, offset=offset)
+                  'I', 'J', samples,
+                  inf = 0, sup = 1,
+                  offset = offset,
+                  cond_thickness = .05,
+                  i_cond = [.20, .5, .80],
+                  j_cond = [.33, .66])
     
     plt.show()
 

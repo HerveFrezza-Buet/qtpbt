@@ -10,7 +10,8 @@ XXs = 1.0 - np.flip(Xs[:-1])
 YYs = 1.0 - np.flip(Ys[:-1])
 Xs  = np.hstack((Xs, XXs))
 Ys  = np.hstack((Ys, YYs))
-h_sigmoid = va.utils.Spline(Xs, Ys, degree=3) 
+h_sigmoid1 = va.utils.Spline(Xs, Ys, degree=3) 
+h_sigmoid2 = va.utils.SVR(Xs, Ys, sigma=.3) 
 
 
 def test_001():
@@ -47,28 +48,40 @@ def test_003():
 
 def test_004():
     U  = va.sampler.Uniform()
-    f  = h_sigmoid
-    fU = va.sampler.Apply(U, f, vectorized = True)
-    fig = plt.figure(figsize = (10, 5))
     nb_samples = 300
+    
+    fig = plt.figure(figsize = (10, 10))
+    
+    plt.subplot(2,1,1)
+    f  = h_sigmoid1
+    fU = va.sampler.Apply(U, f, vectorized = True)
     data = fU(nb_samples)
     va.plot.spline_1d(fig.gca(), f, 0, 1, 200)
+    plt.scatter(data['from_samples'], np.zeros(nb_samples), alpha = .1)
+    plt.scatter(np.zeros(nb_samples), data['samples'],      alpha = .1)
+    
+    plt.subplot(2,1,2)
+    f  = h_sigmoid2
+    fU = va.sampler.Apply(U, f, vectorized = True)
+    data = fU(nb_samples)
+    va.plot.function_1d(fig.gca(), f, 0, 1, 200)
     plt.scatter(data['from_samples'], np.zeros(nb_samples), alpha = .1)
     plt.scatter(np.zeros(nb_samples), data['samples'],      alpha = .1)
     plt.show()
 
 def test_005():
     U  = va.sampler.Uniform()
-    f  = h_sigmoid
+    f  = h_sigmoid1
     fU = va.sampler.Apply(U, f, vectorized = True)
     nb_samples = 1000
+    offset = .05
+    
     data = fU(nb_samples)
     samples = data['samples']
     from_samples = data['from_samples']
-    pU  = va.estimator.density_1d(from_samples, bin_width=.05, degree=2)
-    pfU = va.estimator.density_1d(samples,      bin_width=.05, degree=2)
+    pU  = va.estimator.density_1d(from_samples, inf=0, sup=1, bin_width=.02)
+    pfU = va.estimator.density_1d(samples,      inf=0, sup=1, bin_width=.02)
 
-    offset = .05
     
     fig = plt.figure(figsize = (10, 10))
     gs  = fig.add_gridspec(2, 2,
@@ -86,14 +99,10 @@ def test_005():
     ax.scatter(np.ones(nb_samples) - offset, samples,       alpha = .01)
     
     ax = fig.add_subplot(gs[1, 0], sharex = ax_main)
-    ax.set_aspect('equal')
     ax.set_xlim((0.0, 1.0))
-    ax.set_ylim((0.0, 0.5))
     va.plot.function_1d(ax, pU, 0, 1, 200)
     
     ax = fig.add_subplot(gs[0, 1], sharey = ax_main)
-    ax.set_aspect('equal')
-    ax.set_xlim((0.0, 0.5))
     ax.set_ylim((0.0, 1.0))
     va.plot.function_1d(ax, pfU, 0, 1, 200, orientation = 'yx')
     
