@@ -64,7 +64,7 @@ def test_005():
     fig = plt.figure(figsize = (10, 5))
     nb_samples = 1000
     samples = fU(nb_samples)['samples']
-    p = va.estimator.density_1d(samples)
+    p = va.estimator.density_1d(samples, bin_width=.05)
     plt.scatter(samples, np.zeros(nb_samples), alpha = .1)
     va.plot.function_1d(fig.gca(), p, 0, 1, 200, vectorized = True)
     plt.show()
