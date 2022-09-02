@@ -10,7 +10,7 @@ def expectancy(sampler, nb_samples):
     """
     return np.mean(sampler(nb_samples)['samples'])
 
-def density_1d(samples, bin_width=.05):
+def density_1d(samples, bin_width=.05, degree=3):
     Xs = np.sort(samples)
     nb_points = int((Xs[-1] - Xs[0]) / bin_width + .5)
     X = np.linspace(Xs[0], Xs[-1], nb_points, endpoint=True)
@@ -22,5 +22,5 @@ def density_1d(samples, bin_width=.05):
         Y.append(len(Bin))
     Y = np.array(Y)
     Y = Y * (1.0 / np.sum(Y))
-    return utils.Spline(X, Y, 3)
+    return utils.Spline(X, Y, degree)
 

@@ -61,12 +61,12 @@ def test_005():
     U  = va.sampler.Uniform()
     f  = h_sigmoid
     fU = va.sampler.Apply(U, f, vectorized = True)
-    nb_samples = 500
+    nb_samples = 1000
     data = fU(nb_samples)
     samples = data['samples']
     from_samples = data['from_samples']
-    pU  = va.estimator.density_1d(from_samples, bin_width=.05)
-    pfU = va.estimator.density_1d(samples, bin_width=.05)
+    pU  = va.estimator.density_1d(from_samples, bin_width=.05, degree=2)
+    pfU = va.estimator.density_1d(samples,      bin_width=.05, degree=2)
 
     offset = .05
     
@@ -82,8 +82,8 @@ def test_005():
     ax.set_xlim((0.0, 1.0))
     ax.set_ylim((0.0, 1.0))
     va.plot.spline_1d(ax, f, 0, 1, 200)
-    ax.scatter(from_samples, np.zeros(nb_samples) + offset, alpha = .1)
-    ax.scatter(np.ones(nb_samples) - offset, samples,       alpha = .1)
+    ax.scatter(from_samples, np.zeros(nb_samples) + offset, alpha = .01)
+    ax.scatter(np.ones(nb_samples) - offset, samples,       alpha = .01)
     
     ax = fig.add_subplot(gs[1, 0], sharex = ax_main)
     ax.set_aspect('equal')
