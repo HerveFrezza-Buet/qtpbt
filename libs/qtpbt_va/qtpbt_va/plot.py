@@ -25,6 +25,30 @@ def spline_1d(ax, f, inf, sup, nb, orientation = 'xy', color=colors[0]):
     else:
         ax.scatter(f.Ys, f.Xs, c=color)
 
+def proba_1d(ax, fx_sampler, inf, sup, nb_samples, test, var_name, test_name, alpha=.01):
+    data = fx_sampler(nb_samples)
+    function_1d(ax, fx_sampler.f, 0, 1, 200)
+    ax.set_ylabel(r'${}$'.format(var_name))
+    data = np.stack((data['samples'], data['from_samples'])).T
+    data_pass = []
+    data_fail = []
+    for d in data:
+        if test(d[0]) :
+            data_pass.append(d)
+        else:
+            data_fail.append(d)
+    data_pass = np.array(data_pass)
+    data_fail = np.array(data_fail)
+    proba = len(data_pass)/float(len(data))
+    ax.set_xlabel(r'${}mathrm P {}left( {} {}right) = {:.2f}$'.format('\\', '\\', test_name, '\\', proba))
+                                        
+    plt.scatter(data_fail[..., 1], np.zeros(len(data_fail)), color=colors[0], alpha = alpha)    
+    plt.scatter(np.zeros(len(data_fail)), data_fail[..., 0], color=colors[1], alpha = alpha)  
+    plt.scatter(data_pass[..., 1], np.zeros(len(data_pass)), color=colors[2], alpha = alpha)    
+    plt.scatter(np.zeros(len(data_pass)), data_pass[..., 0], color=colors[3], alpha = alpha)    
+    plt.scatter(data_pass[..., 1], data_pass[..., 0], color='k', alpha = 2*alpha)  
+    
+
 def joint(ax_ij, ax_i, ax_j, i_name, j_name, samples, inf = None, sup = None,  bin_width=.05, offset=.1,
           sample_color = colors[1], density_color = colors[0], cond_thickness = None, i_cond = None, j_cond = None):
     nb_samples = len(samples)

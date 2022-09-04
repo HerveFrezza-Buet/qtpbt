@@ -108,7 +108,21 @@ def test_005():
     
     plt.show()
     
-                          
+        
+def test_006():
+    
+    U  = va.sampler.Uniform()
+    nb_samples = 300
+    
+    fig = plt.figure(figsize = (10, 5))
+    
+    f  = lambda x : .5*np.sin(2*np.pi*x) + x
+    fU = va.sampler.Apply(U, f, vectorized = True)
+    inf, sup = .5, .7
+    va.plot.proba_1d(fig.gca(), fU, 0, 1, 1000,
+                     lambda x, inf=inf, sup=sup : inf <= x <= sup,
+                     'X', f'X \\in [{inf}, {sup}]')
+    plt.show()
 
 
 if __name__ == "__main__":
