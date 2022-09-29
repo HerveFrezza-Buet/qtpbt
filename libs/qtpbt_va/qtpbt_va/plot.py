@@ -5,16 +5,16 @@ from . import estimator
 plt.rcParams['text.usetex'] = True
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
-def function_1d(ax, f, inf, sup, nb, vectorized = True, orientation = 'xy', color=colors[0], alpha=1.0, label=None):
+def function_1d(ax, f, inf, sup, nb, vectorized = True, orientation = 'xy', color=colors[0], alpha=1.0, label=None, zorder=1):
     Xs = np.linspace(inf, sup, nb, endpoint=True)
     if vectorized:
         Ys = f(Xs)
     else:
         Ys = np.array([f(x) for x in Xs])
     if orientation == 'xy':
-        ax.plot(Xs, Ys, c=color, alpha=alpha, label=label)
+        ax.plot(Xs, Ys, c=color, alpha=alpha, label=label, zorder=zorder)
     else:
-        ax.plot(Ys, Xs, c=color, alpha=alpha, label=label)
+        ax.plot(Ys, Xs, c=color, alpha=alpha, label=label, zorder=zorder)
     
 
 
@@ -58,14 +58,13 @@ def joint(ax_ij, ax_i, ax_j, i_name, j_name, samples, inf = None, sup = None,  b
     ax_ij.set_ylim((0.0, 1.0))
     ax_ij.scatter(samples[...,0], samples[..., 1], alpha = .1, color = sample_color)
 
-
-    ax_i.set_title(f'{i_name}, marginalization')
+    ax_i.set_title(r'${}$, marginalization'.format(i_name))
     ax_i.set_xlim((0.0, 1.0))
     pI  = estimator.density_1d(samples[..., 0], bin_width=bin_width, inf=inf, sup=sup)
     ax_i.scatter(samples[..., 0], np.zeros(nb_samples) + offset, alpha = 0.01, color = sample_color)
     function_1d(ax_i, pI, 0, 1, 200, orientation = 'xy', color = density_color, label=r'${}mathrm p_{}{}{}$'.format('\\', '{', i_name, '}'))
     
-    ax_j.set_title(f'{j_name}, marginalization')
+    ax_j.set_title(r'${}$, marginalization'.format(j_name))
     ax_j.set_ylim((0.0, 1.0))
     pJ  = estimator.density_1d(samples[..., 1], bin_width=bin_width, inf=inf, sup=sup)
     ax_j.scatter(np.zeros(nb_samples) + offset, samples[..., 1], alpha = 0.01, color = sample_color)
