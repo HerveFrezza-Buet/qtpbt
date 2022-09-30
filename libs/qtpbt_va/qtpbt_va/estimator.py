@@ -13,7 +13,7 @@ def expectancy(sampler, nb_samples):
     """
     return np.mean(sampler(nb_samples)['samples'])
 
-def density_1d(samples, inf=None, sup=None, bin_width=.05, nb_points=100):
+def density_1d(samples, inf=None, sup=None, bin_width=.05, nb_bins=100):
     Xs = samples
     Y = []
     bw = bin_width * .5
@@ -21,7 +21,7 @@ def density_1d(samples, inf=None, sup=None, bin_width=.05, nb_points=100):
         inf = np.min(Xs)
     if sup == None:
         sup = np.max(Xs)
-    X = np.linspace(inf, sup, nb_points, endpoint=True)
+    X = np.linspace(inf, sup, nb_bins, endpoint=True)
     for x in X:
         inf, sup = x - bw, x + bw
         Bin = Xs[np.logical_and(Xs >= inf, Xs <= sup)]

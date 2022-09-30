@@ -49,7 +49,7 @@ def proba_1d(ax, fx_sampler, inf, sup, nb_samples, test, var_name, test_name, al
     plt.scatter(data_pass[..., 1], data_pass[..., 0], color='k', alpha = 2*alpha)  
     
 
-def joint(ax_ij, ax_i, ax_j, i_name, j_name, samples, inf = None, sup = None,  bin_width=.05, offset=.1,
+def joint(ax_ij, ax_i, ax_j, i_name, j_name, samples, inf = None, sup = None,  bin_width=.05, nb_bins=100, offset=.1,
           sample_color = colors[1], density_color = colors[0], cond_thickness = None, i_cond = None, j_cond = None):
     nb_samples = len(samples)
     ax_ij.set_aspect('equal')
