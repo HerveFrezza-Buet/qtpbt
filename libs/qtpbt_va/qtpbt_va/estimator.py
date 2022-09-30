@@ -13,7 +13,7 @@ def expectancy(sampler, nb_samples):
     """
     return np.mean(sampler(nb_samples)['samples'])
 
-def density_1d(samples, inf=None, sup=None, bin_width=.05, epsilon=.001, C=1, sigma=.1):
+def density_1d(samples, inf=None, sup=None, bin_width=.05, nb_points=100):
     Xs = samples
     Y = []
     bw = bin_width * .5
@@ -21,7 +21,6 @@ def density_1d(samples, inf=None, sup=None, bin_width=.05, epsilon=.001, C=1, si
         inf = np.min(Xs)
     if sup == None:
         sup = np.max(Xs)
-    nb_points = int((sup - inf) / bin_width + .5) * 2
     X = np.linspace(inf, sup, nb_points, endpoint=True)
     for x in X:
         inf, sup = x - bw, x + bw
@@ -30,29 +29,7 @@ def density_1d(samples, inf=None, sup=None, bin_width=.05, epsilon=.001, C=1, si
     Y = np.array(Y)
     integ = scipy.integrate.trapezoid(Y, x=X)
     Y = Y * (1.0 / integ)
-    debug_density = False
-    if debug_density:
-        plt.figure()
-        print(X, Y)
-        plt.scatter(X, Y)
-        f = utils.SVR(X, Y, epsilon=epsilon, C=C, sigma=sigma)
-        plt.plot(X, f(X))
-        plt.show()
-    return utils.SVR(X, Y, epsilon=epsilon, C=C, sigma=sigma)
-
-def density_1d_old(samples, bin_width=.05, degree=3):
-    Xs = np.sort(samples)
-    nb_points = int((Xs[-1] - Xs[0]) / bin_width + .5)
-    X = np.linspace(Xs[0], Xs[-1], nb_points, endpoint=True)
-    Y = []
-    bw = bin_width * .5
-    for x in X:
-        inf, sup = x - bw, x + bw
-        Bin = Xs[np.logical_and(Xs >= inf, Xs <= sup)]
-        Y.append(len(Bin))
-    Y = np.array(Y)
-    Y = Y * (1.0 / np.sum(Y))
-    return utils.Spline(X, Y, degree)
+    return utils.LinearInterpolator(X, Y)
 
 
 

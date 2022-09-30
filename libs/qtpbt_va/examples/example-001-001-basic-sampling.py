@@ -79,8 +79,8 @@ def test_005():
     data = fU(nb_samples)
     samples = data['samples']
     from_samples = data['from_samples']
-    pU  = va.estimator.density_1d(from_samples, inf=0, sup=1, bin_width=.02)
-    pfU = va.estimator.density_1d(samples,      inf=0, sup=1, bin_width=.02)
+    pU  = va.estimator.density_1d(from_samples, inf=0, sup=1, bin_width=.1)
+    pfU = va.estimator.density_1d(samples,      inf=0, sup=1, bin_width=.1)
 
     
     fig = plt.figure(figsize = (10, 10))

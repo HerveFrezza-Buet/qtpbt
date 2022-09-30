@@ -28,3 +28,17 @@ class SVR:
     def __call__(self, Xs):
         return self.f(Xs)
     
+
+class LinearInterpolator:
+    def __init__(self, Xs, Ys):
+        args = np.argsort(Xs)
+        Xs = Xs[args]
+        Ys = Ys[args]
+        self.Xs = np.append(np.insert(Xs, 0, Xs[0]), Xs[-1])
+        self.Ys = np.append(np.insert(Ys, 0, 0), 0)
+        self.f = scipy.interpolate.interp1d(Xs, Ys)
+
+        
+    def __call__(self, Xs):
+        return self.f(Xs)
+    
