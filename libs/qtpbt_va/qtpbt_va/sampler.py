@@ -65,6 +65,12 @@ class Apply(Sampler):
                 'f' : self.f,
                 'from_samples' : from_samples}
 
+def empirical(sampler, n) :
+    """
+    Build de 'average over n iid' random variable.
+    """
+    return Apply(Nuplet(sampler, n), lambda u : np.mean(u))
+
         
         
 
